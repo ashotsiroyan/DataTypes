@@ -1,0 +1,6 @@
+C:\Users\WeFlex\source\repos\DataTypes\DataTypes\bin\Debug\DataTypes.dll
+C:\Users\WeFlex\source\repos\DataTypes\DataTypes\bin\Debug\DataTypes.pdb
+C:\Users\WeFlex\source\repos\DataTypes\DataTypes\obj\Debug\DataTypes.csproj.CoreCompileInputs.cache
+C:\Users\WeFlex\source\repos\DataTypes\DataTypes\obj\Debug\DataTypes.dll
+C:\Users\WeFlex\source\repos\DataTypes\DataTypes\obj\Debug\DataTypes.pdb
+C:\Users\WeFlex\source\repos\DataTypes\DataTypes\obj\Debug\DataTypes.csprojAssemblyReference.cache

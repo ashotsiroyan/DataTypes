@@ -1,0 +1,6 @@
+C:\Users\WeFlex\source\repos\DataTypes\Queue\bin\Debug\Queue.dll
+C:\Users\WeFlex\source\repos\DataTypes\Queue\bin\Debug\Queue.pdb
+C:\Users\WeFlex\source\repos\DataTypes\Queue\obj\Debug\Queue.csproj.CoreCompileInputs.cache
+C:\Users\WeFlex\source\repos\DataTypes\Queue\obj\Debug\Queue.dll
+C:\Users\WeFlex\source\repos\DataTypes\Queue\obj\Debug\Queue.pdb
+C:\Users\WeFlex\source\repos\DataTypes\Queue\obj\Debug\Queue.csprojAssemblyReference.cache

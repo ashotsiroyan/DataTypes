@@ -1,0 +1,11 @@
+C:\Users\WeFlex\source\repos\DataTypes\Stack\Stack\bin\Debug\Stack.dll
+C:\Users\WeFlex\source\repos\DataTypes\Stack\Stack\bin\Debug\Stack.pdb
+C:\Users\WeFlex\source\repos\DataTypes\Stack\Stack\obj\Debug\Stack.csprojAssemblyReference.cache
+C:\Users\WeFlex\source\repos\DataTypes\Stack\Stack\obj\Debug\Stack.csproj.CoreCompileInputs.cache
+C:\Users\WeFlex\source\repos\DataTypes\Stack\Stack\obj\Debug\Stack.dll
+C:\Users\WeFlex\source\repos\DataTypes\Stack\Stack\obj\Debug\Stack.pdb
+C:\Users\WeFlex\source\repos\DataTypes\Stack\bin\Debug\Stack.dll
+C:\Users\WeFlex\source\repos\DataTypes\Stack\bin\Debug\Stack.pdb
+C:\Users\WeFlex\source\repos\DataTypes\Stack\obj\Debug\Stack.csproj.CoreCompileInputs.cache
+C:\Users\WeFlex\source\repos\DataTypes\Stack\obj\Debug\Stack.dll
+C:\Users\WeFlex\source\repos\DataTypes\Stack\obj\Debug\Stack.pdb
