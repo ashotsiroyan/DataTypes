@@ -24,6 +24,33 @@ namespace LinkedList
             count++;
         }
 
+        public void AddFirst(T data)
+        {
+            Node<T> node = new Node<T>(data);
+
+            node.Next = head;
+            head = node;
+
+            if (count == 0)
+                tail = head;
+
+            count++;
+        }
+
+        public void AddLast(T data)
+        {
+            Node<T> node = new Node<T>(data);
+
+            if (count == 0)
+                head = node;
+            else
+                tail.Next = node;
+
+            tail = node;
+
+            count++;
+        }
+
         public bool Remove(T data)
         {
             Node<T> current = head;
@@ -88,19 +115,6 @@ namespace LinkedList
             }
 
             return false;
-        }
-
-        public void AppendFirst(T data)
-        {
-            Node<T> node = new Node<T>(data);
-
-            node.Next = head;
-            head = node;
-
-            if (count == 0)
-                tail = head;
-
-            count++;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

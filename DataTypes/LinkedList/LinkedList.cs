@@ -24,6 +24,33 @@ namespace DataTypes
             count++;
         }
 
+        public void AddFirst(T data)
+        {
+            LinkedListNode<T> node = new LinkedListNode<T>(data);
+
+            node.Next = head;
+            head = node;
+
+            if (count == 0)
+                tail = head;
+
+            count++;
+        }
+
+        public void AddLast(T data)
+        {
+            LinkedListNode<T> node = new LinkedListNode<T>(data);
+
+            if (count == 0)
+                head = node;
+            else
+                tail.Next = node;
+
+            tail = node;
+
+            count++;
+        }
+
         public bool Remove(T data)
         {
             LinkedListNode<T> current = head;
@@ -88,19 +115,6 @@ namespace DataTypes
             }
 
             return false;
-        }
-
-        public void AppendFirst(T data)
-        {
-            LinkedListNode<T> node = new LinkedListNode<T>(data);
-
-            node.Next = head;
-            head = node;
-
-            if (count == 0)
-                tail = head;
-
-            count++;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

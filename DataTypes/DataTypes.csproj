@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinaryTree\BinaryTree.cs" />
     <Compile Include="BinaryTree\Node.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Graph\Vertex.cs" />
