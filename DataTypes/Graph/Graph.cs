@@ -198,7 +198,7 @@ namespace DataTypes
 
         public bool[] BFS(T node)
         {
-            Queue<int> stack = new Queue<int>(Vertices.Count);
+            Queue<int> queue = new Queue<int>(Vertices.Count);
             bool[] inqueue = new bool[Vertices.Count];
             bool[] visited = new bool[Vertices.Count];
 
@@ -212,12 +212,12 @@ namespace DataTypes
 
             if (index != -1)
             {
-                stack.Enqueue(index);
+                queue.Enqueue(index);
                 inqueue[index] = true;
 
-                while (!stack.IsEmpty())
+                while (!queue.IsEmpty())
                 {
-                    int c = stack.Dequeue();
+                    int c = queue.Dequeue();
 
                     inqueue[c] = false;
                     visited[c] = true;
@@ -228,7 +228,7 @@ namespace DataTypes
 
                         if (!visited[index] && !inqueue[index])
                         {
-                            stack.Enqueue(index);
+                            queue.Enqueue(index);
                             inqueue[c] = true;
                         }
                     }

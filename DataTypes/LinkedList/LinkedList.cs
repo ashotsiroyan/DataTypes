@@ -6,54 +6,54 @@ namespace DataTypes
 {
     public class LinkedList<T>: IEnumerable<T>
     {
-        private LinkedListNode<T> head;
-        private LinkedListNode<T> tail;
-        private int count;
+        public LinkedListNode<T> Head { get; private set; }
+        public LinkedListNode<T> Tail { get; private set; }
+        public int Count { get; private set; }
 
         public void Add(T data)
         {
             LinkedListNode<T> node = new LinkedListNode<T>(data);
 
-            if (head == null)
-                head = node;
+            if (Head == null)
+                Head = node;
             else
-                tail.Next = node;
+                Tail.Next = node;
 
-            tail = node;
+            Tail = node;
 
-            count++;
+            Count++;
         }
 
         public void AddFirst(T data)
         {
             LinkedListNode<T> node = new LinkedListNode<T>(data);
 
-            node.Next = head;
-            head = node;
+            node.Next = Head;
+            Head = node;
 
-            if (count == 0)
-                tail = head;
+            if (Count == 0)
+                Tail = Head;
 
-            count++;
+            Count++;
         }
 
         public void AddLast(T data)
         {
             LinkedListNode<T> node = new LinkedListNode<T>(data);
 
-            if (count == 0)
-                head = node;
+            if (Count == 0)
+                Head = node;
             else
-                tail.Next = node;
+                Tail.Next = node;
 
-            tail = node;
+            Tail = node;
 
-            count++;
+            Count++;
         }
 
         public bool Remove(T data)
         {
-            LinkedListNode<T> current = head;
+            LinkedListNode<T> current = Head;
             LinkedListNode<T> previous = null;
 
             while (current != null)
@@ -65,17 +65,17 @@ namespace DataTypes
                         previous.Next = current.Next;
 
                         if (current.Next == null)
-                            tail = previous;
+                            Tail = previous;
                     }
                     else
                     {
-                        head = head.Next;
+                        Head = Head.Next;
 
-                        if (head == null)
-                            tail = null;
+                        if (Head == null)
+                            Tail = null;
                     }
 
-                    count--;
+                    Count--;
 
                     return true;
                 }
@@ -87,34 +87,38 @@ namespace DataTypes
             return false;
         }
 
-        public int Count {
-            get { return count; }
-        }
-
-        public bool IsEmpty {
-            get { return count == 0; }
-        }
-
-        public void Clear()
+        public LinkedListNode<T> Find(T data)
         {
-            head = null;
-            tail = null;
-            count = 0;
-        }
-
-        public bool Contains(T data)
-        {
-            LinkedListNode<T> current = head;
+            LinkedListNode<T> current = Head;
 
             while (current != null)
             {
                 if (current.Data.Equals(data))
-                    return true;
+                    return current;
 
                 current = current.Next;
             }
 
+            return null;
+        }
+
+        public bool Contains(T data)
+        {
+            if (Find(data) != null)
+                return true;
+
             return false;
+        }
+
+        public void Clear()
+        {
+            Head = null;
+            Tail = null;
+            Count = 0;
+        }
+
+        public bool IsEmpty {
+            get { return Count == 0; }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -124,7 +128,7 @@ namespace DataTypes
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            LinkedListNode<T> current = head;
+            LinkedListNode<T> current = Head;
             while (current != null)
             {
                 yield return current.Data;

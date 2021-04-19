@@ -9,7 +9,7 @@ namespace DataTypes
         private T[] items;
         private int head;
         private int tail;
-        private int count;
+        public int Count { get; private set; }
 
         private const int n = 10;
 
@@ -25,7 +25,7 @@ namespace DataTypes
 
         public void Enqueue(T item)
         {
-            if (count == items.Length)
+            if (Count == items.Length)
                 throw new InvalidOperationException("Queue is full");
 
             if(tail == items.Length)
@@ -33,7 +33,7 @@ namespace DataTypes
 
             items[tail++] = item;
 
-            ++count;
+            ++Count;
         }
 
         public T Dequeue()
@@ -49,7 +49,7 @@ namespace DataTypes
             else
                 ++head;
 
-            --count;
+            --Count;
 
             return item;
         }
@@ -66,17 +66,12 @@ namespace DataTypes
                 items[i] = default(T);
             }
 
-            count = 0;
-        }
-
-        public int Count
-        {
-            get { return count; }
+            Count = 0;
         }
 
         public bool IsEmpty()
         {
-            return count == 0;
+            return Count == 0;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

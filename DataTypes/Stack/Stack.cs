@@ -7,7 +7,7 @@ namespace DataTypes
     public class Stack<T>: IEnumerable<T>
     {
         private T[] items;
-        private int count;
+        public int Count { get; private set; }
 
         private const int n = 10;
 
@@ -24,20 +24,15 @@ namespace DataTypes
 
         public bool IsEmpty()
         {
-            return count == 0;
-        }
-
-        public int Count
-        {
-            get { return count; }
+            return Count == 0;
         }
 
         public void Push(T item)
         {
-            if (count == items.Length)
+            if (Count == items.Length)
                 throw new InvalidOperationException("Stack is full");
 
-            items[count++] = item;
+            items[Count++] = item;
         }
 
         public T Pop()
@@ -45,26 +40,26 @@ namespace DataTypes
             if (IsEmpty())
                 throw new InvalidOperationException("Stack is empty");
 
-            T item = items[--count];
+            T item = items[--Count];
 
-            items[count] = default(T);
+            items[Count] = default(T);
 
             return item;
         }
 
         public T Top()
         {
-            return items[count - 1];
+            return items[Count - 1];
         }
 
         public void Clear()
         {
-            for (int i = count - 1; i >= 0; --i)
+            for (int i = Count - 1; i >= 0; --i)
             {
                 items[i] = default(T);
             }
 
-            count = 0;
+            Count = 0;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -74,7 +69,7 @@ namespace DataTypes
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            for (int i = count - 1; i >= 0; --i)
+            for (int i = Count - 1; i >= 0; --i)
             {
                 yield return items[i];
             }
