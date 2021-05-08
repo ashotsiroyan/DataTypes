@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DataTypes
 {
     public class Graph<T>
     {
-        private List<Vertex<T>> Vertices;
+        public List<Vertex<T>> Vertices { get; private set; }
 
         public Graph()
         {
             Vertices = new List<Vertex<T>>();
         }
 
-        public Graph(T[] Nodes)
+        public Graph(T[] vertices)
         {
             Vertices = new List<Vertex<T>>();
 
-            for (int i = 0; i < Nodes.Length; ++i)
-                Vertices.Add(new Vertex<T>(Nodes[i]));
+            for (int i = 0; i < vertices.Length; ++i)
+                Vertices.Add(new Vertex<T>(vertices[i]));
         }
 
         public bool AddNode(T data)
@@ -95,30 +94,34 @@ namespace DataTypes
             }
         }
 
-        public List<Vertex<T>> Nodes
-        {
-            get { return Vertices; }
-        }
-
         public int Size
         {
             get { return Vertices.Count; }
         }
 
-        public void DFS(T node, bool[] visited)
+        public bool[] DFS(T node)
         {
-            int index = FindNodeIndex(node);
+            bool[] visited = new bool[Vertices.Count];
 
-            if (index != -1)
+            void localDFS(T _node)
             {
-                visited[index] = true;
+                int index = FindNodeIndex(_node);
 
-                foreach (Vertex<T> vertex in Vertices[index].Neighbors)
+                if (index != -1)
                 {
-                    if (!visited[FindNodeIndex(vertex.Data)])
-                        DFS(vertex.Data, visited);
+                    visited[index] = true;
+
+                    foreach (Vertex<T> vertex in Vertices[index].Neighbors)
+                    {
+                        if (!visited[FindNodeIndex(vertex.Data)])
+                            localDFS(vertex.Data);
+                    }
                 }
             }
+
+            localDFS(node);
+
+            return visited;
         }
 
         public bool[] StackDFS(T node)

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DataTypes
+﻿namespace DataTypes
 {
     public class LinkedListNode<T>
     {
