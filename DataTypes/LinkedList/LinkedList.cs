@@ -36,18 +36,19 @@ namespace DataTypes
             Count++;
         }
 
-        public void AddLast(T data)
+        public void AddAfter(LinkedListNode<T> node, T data)
         {
-            LinkedListNode<T> node = new LinkedListNode<T>(data);
+            LinkedListNode<T> _node = new LinkedListNode<T>(data);
 
-            if (Count == 0)
-                Head = node;
-            else
-                Tail.Next = node;
+            if(Find(node) != null)
+            {
+                if (node.Next != null)
+                    _node.Next = node.Next;
 
-            Tail = node;
+                node.Next = _node;
 
-            Count++;
+                Count++;
+            }
         }
 
         public bool Remove(T data)
@@ -86,6 +87,42 @@ namespace DataTypes
             return false;
         }
 
+        public bool Remove(LinkedListNode<T> node)
+        {
+            LinkedListNode<T> current = Head;
+            LinkedListNode<T> previous = null;
+
+            while (current != null)
+            {
+                if (current == node)
+                {
+                    if (previous != null)
+                    {
+                        previous.Next = current.Next;
+
+                        if (current.Next == null)
+                            Tail = previous;
+                    }
+                    else
+                    {
+                        Head = Head.Next;
+
+                        if (Head == null)
+                            Tail = null;
+                    }
+
+                    Count--;
+
+                    return true;
+                }
+
+                previous = current;
+                current = current.Next;
+            }
+
+            return false;
+        }
+
         public LinkedListNode<T> Find(T data)
         {
             LinkedListNode<T> current = Head;
@@ -93,6 +130,21 @@ namespace DataTypes
             while (current != null)
             {
                 if (current.Data.Equals(data))
+                    return current;
+
+                current = current.Next;
+            }
+
+            return null;
+        }
+
+        public LinkedListNode<T> Find(LinkedListNode<T> node)
+        {
+            LinkedListNode<T> current = Head;
+
+            while (current != null)
+            {
+                if (current == node)
                     return current;
 
                 current = current.Next;
