@@ -38,10 +38,10 @@ namespace DataTypes
 
         public void AddAfter(LinkedListNode<T> node, T data)
         {
-            LinkedListNode<T> _node = new LinkedListNode<T>(data);
-
-            if(Find(node) != null)
+            if (node != null)
             {
+                LinkedListNode<T> _node = new LinkedListNode<T>(data);
+
                 if (node.Next != null)
                     _node.Next = node.Next;
 
@@ -49,6 +49,8 @@ namespace DataTypes
 
                 Count++;
             }
+            else
+                AddFirst(data);
         }
 
         public bool Remove(T data)
