@@ -36,21 +36,30 @@ namespace DataTypes
             Count++;
         }
 
-        public void AddAfter(LinkedListNode<T> node, T data)
+        public bool AddAfter(LinkedListNode<T> node, T data)
         {
             if (node != null)
             {
-                LinkedListNode<T> _node = new LinkedListNode<T>(data);
+                if (Find(node) != null)
+                {
+                    LinkedListNode<T> _node = new LinkedListNode<T>(data);
 
-                if (node.Next != null)
-                    _node.Next = node.Next;
+                    if (node.Next != null)
+                        _node.Next = node.Next;
 
-                node.Next = _node;
+                    node.Next = _node;
 
-                Count++;
+                    Count++;
+                    return true;
+                }
+                else
+                    return false;
             }
             else
+            {
                 AddFirst(data);
+                return true;
+            }
         }
 
         public bool Remove(T data)

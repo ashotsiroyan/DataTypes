@@ -14,9 +14,9 @@
 
             ++size;
 
-            while (node != root && node.Priority < GetParent(node).Priority)
+            while (node != root && node.Priority < FindParent(node).Priority)
             {
-                PriorityQueueNode<T> parent = GetParent(node);
+                PriorityQueueNode<T> parent = FindParent(node);
                 Exchange(ref node, ref parent);
                 node = parent;
             }
@@ -50,7 +50,7 @@
             return node;
         }
 
-        public PriorityQueueNode<T> GetParent(PriorityQueueNode<T> node)
+        public PriorityQueueNode<T> FindParent(PriorityQueueNode<T> node)
         {
             PriorityQueueNode<T> current = root;
             PriorityQueueNode<T> parent = null;
@@ -111,37 +111,6 @@
             get { return size == 0; }
         }
 
-        private void Exchange(ref PriorityQueueNode<T> node1, ref PriorityQueueNode<T> node2)
-        {
-            T data = node1.Data;
-            int priority = node1.Priority;
-
-            node1.Data = node2.Data;
-            node1.Priority = node2.Priority;
-
-            node2.Data = data;
-            node2.Priority = priority;
-        }
-
-        private void Add(PriorityQueueNode<T> node, ref PriorityQueueNode<T> tree)
-        {
-            if(tree == null)
-            {
-                tree = node;
-            }
-            else
-            {
-                if (node.Priority < tree.Priority)
-                {
-                    Add(node, ref tree.Left);
-                }
-                else
-                {
-                    Add(node, ref tree.Right);
-                }
-            }
-        }
-
         public PriorityQueueNode<T> ExtractLast()
         {
             PriorityQueueNode<T> current = root;
@@ -166,6 +135,37 @@
             --size;
 
             return current;
+        }
+
+        private void Add(PriorityQueueNode<T> node, ref PriorityQueueNode<T> tree)
+        {
+            if (tree == null)
+            {
+                tree = node;
+            }
+            else
+            {
+                if (node.Priority < tree.Priority)
+                {
+                    Add(node, ref tree.Left);
+                }
+                else if(node.Priority > tree.Priority)
+                {
+                    Add(node, ref tree.Right);
+                }
+            }
+        }
+
+        private void Exchange(ref PriorityQueueNode<T> node1, ref PriorityQueueNode<T> node2)
+        {
+            T data = node1.Data;
+            int priority = node1.Priority;
+
+            node1.Data = node2.Data;
+            node1.Priority = node2.Priority;
+
+            node2.Data = data;
+            node2.Priority = priority;
         }
     }
 }
