@@ -123,29 +123,23 @@
 
         private void DeleteNode(ref BinaryTreeNode<T> node)
         {
-            BinaryTreeNode<T> current;
-
             if (node.Left == null)
             {
-                current = node;
                 node = node.Right;
-                current = null;
             }
             else if (node.Right == null)
             {
-                current = node;
                 node = node.Left;
-                current = null;
             }
             else
             {
+                BinaryTreeNode<T> current;
+
                 for (current = node.Left; current.Right != null; current = current.Right)
                     continue;
 
                 current.Right = node.Right;
-                current = node;
                 node = node.Left;
-                current = null;
             }
         }
 
@@ -193,6 +187,19 @@
                     AddNode(node, root.Right);
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            LinkedList<T> list = Traverse();
+            string treeString = "";
+
+            foreach (T data in list)
+            {
+                treeString += data + " ";
+            }
+
+            return treeString;
         }
     }
 }
