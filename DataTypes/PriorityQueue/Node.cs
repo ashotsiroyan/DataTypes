@@ -21,11 +21,5 @@
         public int Priority { get; set; }
         public PriorityQueueNode<T> Left;
         public PriorityQueueNode<T> Right;
-
-        public void SetFromNode(PriorityQueueNode<T> node)
-        {
-            Data = node.Data;
-            Priority = node.Priority;
-        }
     }
 }

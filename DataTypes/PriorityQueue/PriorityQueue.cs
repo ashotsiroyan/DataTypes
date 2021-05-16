@@ -30,7 +30,8 @@
 
             if (!IsEmpty)
             {
-                root.SetFromNode(lastNode);
+                root.Data = lastNode.Data;
+                root.Priority = lastNode.Priority;
                 current = root;
             }
             else
@@ -149,7 +150,7 @@
                 {
                     Add(node, ref tree.Left);
                 }
-                else if(node.Priority > tree.Priority)
+                else
                 {
                     Add(node, ref tree.Right);
                 }

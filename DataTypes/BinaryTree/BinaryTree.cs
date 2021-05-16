@@ -1,13 +1,13 @@
 ﻿namespace DataTypes
 {
-    public struct Pair<T>
-    {
-        public BinaryTreeNode<T> parent;
-        public BinaryTreeNode<T> child;
-    }
-
     public class BinaryTree<T>
     {
+        public struct Pair
+        {
+            public BinaryTreeNode<T> parent;
+            public BinaryTreeNode<T> child;
+        }
+
         private BinaryTreeNode<T> root;
         private int size;
 
@@ -65,9 +65,9 @@
             return null;
         }
 
-        public Pair<T> FindPair(T data)
+        public Pair FindPair(T data)
         {
-            Pair<T> pair = new Pair<T>();
+            Pair pair = new Pair();
             pair.parent = null;
             pair.child = root;
 
@@ -94,7 +94,7 @@
 
         public bool Delete(T data)
         {
-            Pair<T> pair = FindPair(data);
+            Pair pair = FindPair(data);
 
             if (pair.child == null)
                 return false;
