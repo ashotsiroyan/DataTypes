@@ -138,7 +138,7 @@ namespace DataTypes
             {
                 stack.Push(index);
 
-                while (!stack.IsEmpty())
+                while (!stack.IsEmpty)
                 {
                     int c = stack.Pop();
 
@@ -176,7 +176,7 @@ namespace DataTypes
                 stack.Push(index);
                 instack[index] = true;
 
-                while (!stack.IsEmpty())
+                while (!stack.IsEmpty)
                 {
                     int c = stack.Pop();
 
@@ -218,7 +218,7 @@ namespace DataTypes
                 queue.Enqueue(index);
                 inqueue[index] = true;
 
-                while (!queue.IsEmpty())
+                while (!queue.IsEmpty)
                 {
                     int c = queue.Dequeue();
 

@@ -38,7 +38,7 @@ namespace DataTypes
 
         public T Dequeue()
         {
-            if (IsEmpty())
+            if (IsEmpty)
                 throw new InvalidOperationException("Queue is empty");
 
             T item = items[head];
@@ -69,9 +69,9 @@ namespace DataTypes
             Count = 0;
         }
 
-        public bool IsEmpty()
+        public bool IsEmpty
         {
-            return Count == 0;
+            get { return Count == 0; }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -81,7 +81,7 @@ namespace DataTypes
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            if (!IsEmpty())
+            if (!IsEmpty)
             {
                 int index = head;
 

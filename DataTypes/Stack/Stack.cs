@@ -22,9 +22,9 @@ namespace DataTypes
             items = new T[length];
         }
 
-        public bool IsEmpty()
+        public bool IsEmpty
         {
-            return Count == 0;
+            get { return Count == 0; }
         }
 
         public void Push(T item)
@@ -37,7 +37,7 @@ namespace DataTypes
 
         public T Pop()
         {
-            if (IsEmpty())
+            if (IsEmpty)
                 throw new InvalidOperationException("Stack is empty");
 
             T item = items[--Count];

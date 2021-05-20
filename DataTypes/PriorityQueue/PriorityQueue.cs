@@ -113,6 +113,11 @@
             size = 0;
         }
 
+        public bool isEmpty
+        {
+            get { return size == 0; }
+        }
+
         public PriorityQueueNode<T> Root { get { return root; } }
 
         public int Size { get { return size; } }
