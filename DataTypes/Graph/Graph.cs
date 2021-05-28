@@ -103,7 +103,7 @@ namespace DataTypes
         {
             bool[] visited = new bool[Vertices.Count];
 
-            void localDFS(T _node)
+            void recursionDFS(T _node)
             {
                 int index = FindNodeIndex(_node);
 
@@ -114,12 +114,12 @@ namespace DataTypes
                     foreach (Vertex<T> vertex in Vertices[index].Neighbors)
                     {
                         if (!visited[FindNodeIndex(vertex.Data)])
-                            localDFS(vertex.Data);
+                            recursionDFS(vertex.Data);
                     }
                 }
             }
 
-            localDFS(node);
+            recursionDFS(node);
 
             return visited;
         }
@@ -241,6 +241,22 @@ namespace DataTypes
             return visited;
         }
 
+        public bool[,] toMatrix()
+        {
+            bool[,] matrix = new bool[Vertices.Count,Vertices.Count];
+
+            for (int i = 0; i < Vertices.Count; ++i)
+            {
+                foreach (Vertex<T> node in Vertices[i].Neighbors)
+                {
+                    int j = FindNodeIndex(node.Data);
+                    matrix[i,j] = true;
+                }
+            }
+
+            return matrix;
+        }
+
         private Vertex<T> FindNode(T node)
         {
             foreach (Vertex<T> vertex in Vertices)
@@ -269,6 +285,33 @@ namespace DataTypes
             }
 
             return -1;
+        }
+
+        public override string ToString()
+        {
+            bool[,] matrix = toMatrix();
+            string graphString = "    ";
+
+            for (int i = 0; i < Vertices.Count; ++i)
+            {
+                graphString += " " + Vertices[i].Data + " ";
+            }
+
+            graphString += "\n\n";
+
+            for (int i = 0; i < Vertices.Count; ++i)
+            {
+                graphString += Vertices[i].Data + " | ";
+
+                for (int j = 0; j < Vertices.Count; ++j)
+                {
+                    graphString += " " + (matrix[i,j]?"1":"0") + " ";
+                }
+
+                graphString += "\n";
+            }
+
+            return graphString;
         }
     }
 }
