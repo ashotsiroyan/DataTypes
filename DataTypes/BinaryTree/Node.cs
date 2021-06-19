@@ -1,6 +1,9 @@
-﻿namespace DataTypes
+﻿using System;
+
+namespace DataTypes
 {
     public class BinaryTreeNode<T>
+        where T: IComparable
     {
         public BinaryTreeNode()
         {

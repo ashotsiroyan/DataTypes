@@ -1,12 +1,10 @@
-﻿namespace DataTypes
+﻿using System;
+
+namespace DataTypes
 {
-    public class BinarySearchTree<T>: BinaryTree<T>
+    public class BinarySearchTree<T>: IBinaryTree<T>
+        where T : IComparable
     {
-        public struct Pair
-        {
-            public BinaryTreeNode<T> parent;
-            public BinaryTreeNode<T> child;
-        }
 
         private BinaryTreeNode<T> root;
         private int size;
@@ -34,7 +32,7 @@
 
             while (current != null)
             {
-                int compare = string.Compare(data.ToString(), current.Data.ToString());
+                int compare = data.CompareTo(current.Data);
 
                 if (compare < 0)
                     current = current.Left;
@@ -59,7 +57,7 @@
 
                 parent = current;
 
-                int compare = string.Compare(node.Data.ToString(), current.Data.ToString());
+                int compare = node.Data.CompareTo(current.Data);
 
                 if (compare < 0)
                     current = current.Left;
@@ -70,15 +68,15 @@
             return null;
         }
 
-        public Pair FindPair(T data)
+        public Pair<T> FindPair(T data)
         {
-            Pair pair = new Pair();
+            Pair<T> pair = new Pair<T>();
             pair.parent = null;
             pair.child = root;
 
             while (pair.child != null)
             {
-                int compare = string.Compare(data.ToString(), pair.child.Data.ToString());
+                int compare = data.CompareTo(pair.child.Data);
 
                 if (compare < 0)
                 {
@@ -99,7 +97,7 @@
 
         public bool Delete(T data)
         {
-            Pair pair = FindPair(data);
+            Pair<T> pair = FindPair(data);
 
             if (pair.child == null)
                 return false;
@@ -168,7 +166,7 @@
 
         private void AddNode(BinaryTreeNode<T> node, BinaryTreeNode<T> root)
         {
-            int compare = string.Compare(node.Data.ToString(), root.Data.ToString());
+            int compare = node.Data.CompareTo(root.Data);
 
             if (compare < 0)
             {
