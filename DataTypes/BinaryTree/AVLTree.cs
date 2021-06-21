@@ -2,8 +2,8 @@
 
 namespace DataTypes
 {
-    public class BinarySearchTree<T>: IBinaryTree<T>
-        where T : IComparable
+    public class AVLTree<T>: IBinaryTree<T>
+        where T: IComparable
     {
         private BinaryTreeNode<T> root;
         private int size;
@@ -60,7 +60,7 @@ namespace DataTypes
 
                 if (compare < 0)
                     current = current.Left;
-                else if(compare > 0)
+                else if (compare > 0)
                     current = current.Right;
             }
 
@@ -93,24 +93,9 @@ namespace DataTypes
 
             return pair;
         }
-
         public bool Delete(T data)
         {
-            Pair<T> pair = FindPair(data);
-
-            if (pair.child == null)
-                return false;
-
-            if (pair.parent == null)
-                DeleteNode(ref root);
-            else if (pair.parent.Left == pair.child)
-                DeleteNode(ref pair.parent.Left);
-            else
-                DeleteNode(ref pair.parent.Right);
-
-            --size;
-
-            return true;
+            return false;
         }
 
         public void Clear()
@@ -147,26 +132,110 @@ namespace DataTypes
             return list;
         }
 
-        private void DeleteNode(ref BinaryTreeNode<T> node)
+        private void AddNode(BinaryTreeNode<T> node, ref BinaryTreeNode<T> root)
         {
-            if (node.Left == null)
+            if (root == null)
             {
-                node = node.Right;
-            }
-            else if (node.Right == null)
-            {
-                node = node.Left;
+                root = node;
             }
             else
             {
-                BinaryTreeNode<T> current;
+                int compare = node.Data.CompareTo(root.Data);
 
-                for (current = node.Left; current.Right != null; current = current.Right)
-                    continue;
-
-                current.Right = node.Right;
-                node = node.Left;
+                if (compare < 0)
+                {
+                    AddNode(node, ref root.Left);
+                    balanceTree(ref root);
+                }
+                else if (compare > 0)
+                {
+                    AddNode(node, ref root.Right);
+                    balanceTree(ref root);
+                }
             }
+        }
+
+        private void balanceTree(ref BinaryTreeNode<T> node)
+        {
+            int b_factor = balanceFactor(node);
+            if (b_factor > 1)
+            {
+                if (balanceFactor(node.Left) > 0)
+                {
+                    RotateLL(ref node);
+                }
+                else
+                {
+                    RotateLR(ref node);
+                }
+            }
+            else if (b_factor < -1)
+            {
+                if (balanceFactor(node.Right) > 0)
+                {
+                    RotateRL(ref node);
+                }
+                else
+                {
+                    RotateRR(ref node);
+                }
+            }
+        }
+
+        private int balanceFactor(BinaryTreeNode<T> current)
+        {
+            int l = getHeight(current.Left);
+            int r = getHeight(current.Right);
+            int b_factor = l - r;
+
+            return b_factor;
+        }
+
+        private void RotateRR(ref BinaryTreeNode<T> parent)
+        {
+            BinaryTreeNode<T> pivot = parent.Right;
+            parent.Right = pivot.Left;
+            pivot.Left = parent;
+
+            parent = pivot;
+        }
+
+        private void RotateLL(ref BinaryTreeNode<T> parent)
+        {
+            BinaryTreeNode<T> pivot = parent.Left;
+            parent.Left = pivot.Right;
+            pivot.Right = parent;
+
+            parent = pivot;
+        }
+
+        private void RotateLR(ref BinaryTreeNode<T> parent)
+        {
+            BinaryTreeNode<T> pivot = parent.Left;
+            RotateRR(ref pivot);
+            RotateLL(ref parent);
+        }
+
+        private void RotateRL(ref BinaryTreeNode<T> parent)
+        {
+            BinaryTreeNode<T> pivot = parent.Right;
+            RotateLL(ref pivot);
+            RotateRR(ref parent);
+        }
+
+        private int getHeight(BinaryTreeNode<T> current)
+        {
+            int height = 0;
+
+            if (current != null)
+            {
+                int l = getHeight(current.Left);
+                int r = getHeight(current.Right);
+                int m = l > r ? l : r;
+                height = m + 1;
+            }
+
+            return height;
         }
 
         private void TraverseInOrder(BinaryTreeNode<T> node, LinkedList<T> list)
@@ -197,40 +266,6 @@ namespace DataTypes
                 TraversePostOrder(node.Right, list);
                 list.Add(node.Data);
             }
-        }
-
-        private void AddNode(BinaryTreeNode<T> node, ref BinaryTreeNode<T> root)
-        {
-            if (root == null)
-            {
-                root = node;
-            }
-            else
-            {
-                int compare = node.Data.CompareTo(root.Data);
-
-                if (compare < 0)
-                {
-                    AddNode(node, ref root.Left);
-                }
-                else if (compare > 0)
-                {
-                    AddNode(node, ref root.Right);
-                }
-            }
-        }
-
-        public override string ToString()
-        {
-            LinkedList<T> list = TraverseInOrder();
-            string treeString = "";
-
-            foreach (T data in list)
-            {
-                treeString += data + " ";
-            }
-
-            return treeString;
         }
     }
 }

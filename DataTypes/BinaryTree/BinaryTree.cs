@@ -21,5 +21,8 @@ namespace DataTypes
         Pair<T> FindPair(T data);
         bool Delete(T data);
         void Clear();
+        LinkedList<T> TraverseInOrder();
+        LinkedList<T> TraversePreOrder();
+        LinkedList<T> TraversePostOrder();
     }
 }
