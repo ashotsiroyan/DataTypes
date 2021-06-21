@@ -29,25 +29,30 @@ namespace DataTypes
 
         public T ExtractMin()
         {
-            T node = heap[0];
-
-            heap[0] = heap[Size - 1];
-            heap.RemoveAt(Size - 1);
-
-            int current = 0;
-
-            while (HasChildren(current))
+            if (!IsEmpty)
             {
-                int min = MinChild(current);
+                T node = heap[0];
 
-                if (heap[current].CompareTo(heap[min]) < 0)
-                    return node;
+                heap[0] = heap[Size - 1];
+                heap.RemoveAt(Size - 1);
 
-                Exchange(current, min);
-                current = min;
+                int current = 0;
+
+                while (HasChildren(current))
+                {
+                    int min = MinChild(current);
+
+                    if (heap[current].CompareTo(heap[min]) < 0)
+                        return node;
+
+                    Exchange(current, min);
+                    current = min;
+                }
+
+                return node;
             }
-
-            return node;
+            else
+                return default(T);
         }
 
         public int FindParent(T node)
