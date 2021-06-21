@@ -1,6 +1,6 @@
 ﻿namespace DataTypes
 {
-    class PriorityQueue2<T>
+    public class PriorityQueue2<T>
     {
         private PriorityQueueNode<T> root;
         private int size;
@@ -10,45 +10,60 @@
             if (root == null)
                 root = node;
             else
-                Add(node, ref root);
+                AddNode(node, root);
 
             ++size;
+        }
 
-            while (node != root && node.Priority < FindParent(node).Priority)
-            {
-                PriorityQueueNode<T> parent = FindParent(node);
-                Exchange(ref node, ref parent);
-                node = parent;
-            }
+        public void Insert(T data, int priority)
+        {
+            Insert(new PriorityQueueNode<T>(data, priority));
         }
 
         public PriorityQueueNode<T> ExtractMin()
         {
-            PriorityQueueNode<T> node = new PriorityQueueNode<T>(root.Data, root.Priority);
-            PriorityQueueNode<T> lastNode = ExtractLast();
-            PriorityQueueNode<T> current;
+            PriorityQueueNode<T> current = root;
+            PriorityQueueNode<T> parent = null;
 
-            if (!IsEmpty)
+            while (current.Left != null)
             {
-                root.Data = lastNode.Data;
-                root.Priority = lastNode.Priority;
-                current = root;
+                parent = current;
+                current = current.Left;
             }
+
+            if (parent == null)
+                DeleteNode(ref root);
+            else if (parent.Left == current)
+                DeleteNode(ref parent.Left);
             else
-                current = lastNode;
+                DeleteNode(ref parent.Right);
 
-            while (HasChildren(current))
+            --size;
+
+            return current;
+        }
+
+        public PriorityQueueNode<T> ExtractMax()
+        {
+            PriorityQueueNode<T> current = root;
+            PriorityQueueNode<T> parent = null;
+
+            while (current.Right != null)
             {
-                PriorityQueueNode<T> min = MinChild(current);
-
-                if (current.Priority < min.Priority)
-                    return node;
-
-                Exchange(ref current, ref min);
-                current = min;
+                parent = current;
+                current = current.Right;
             }
 
-            return node;
+            if (parent == null)
+                DeleteNode(ref root);
+            else if (parent.Left == current)
+                DeleteNode(ref parent.Left);
+            else
+                DeleteNode(ref parent.Right);
+
+            --size;
+
+            return current;
         }
 
         public PriorityQueueNode<T> FindParent(PriorityQueueNode<T> node)
@@ -72,101 +87,156 @@
             return null;
         }
 
-        public bool HasChildren(PriorityQueueNode<T> node)
-        {
-            if (node.Left != null || node.Right != null)
-                return true;
 
-            return false;
-        }
-
-        public PriorityQueueNode<T> MinChild(PriorityQueueNode<T> node)
+        public bool Delete(PriorityQueueNode<T> node)
         {
-            if (node.Left == null && node.Right == null)
-                return null;
-            else if (node.Left == null)
-                return node.Right;
-            else if (node.Right == null)
-                return node.Left;
+            PriorityQueueNode<T> parent = FindParent(node);
+
+            if (node == null)
+                return false;
+
+            if (parent == null)
+                DeleteNode(ref root);
+            else if (parent.Left == node)
+                DeleteNode(ref parent.Left);
             else
-            {
-                if (node.Left.Priority < node.Right.Priority)
-                    return node.Left;
-                else
-                    return node.Right;
-            }
+                DeleteNode(ref parent.Right);
+
+            --size;
+
+            return true;
         }
 
-        public PriorityQueueNode<T> Root
+        public void Clear()
         {
-            get { return root; }
+            root = null;
+            size = 0;
         }
 
-        public int Size
-        {
-            get { return size; }
-        }
-
-        public bool IsEmpty
+        public bool isEmpty
         {
             get { return size == 0; }
         }
 
-        public PriorityQueueNode<T> ExtractLast()
+        public PriorityQueueNode<T> Root { get { return root; } }
+
+        public int Size { get { return size; } }
+
+        public PriorityQueueNode<T> Min
         {
-            PriorityQueueNode<T> current = root;
-            PriorityQueueNode<T> parent = null;
-
-            while (HasChildren(current))
+            get
             {
-                parent = current;
-                current = MinChild(current);
+                PriorityQueueNode<T> current = root;
+
+                while (current.Left != null)
+                {
+                    current = current.Left;
+                }
+
+                return current;
             }
-
-            if (current != root)
-            {
-                if (current == parent.Left)
-                    parent.Left = null;
-                else if (current == parent.Right)
-                    parent.Right = null;
-            }
-            else
-                root = null;
-
-            --size;
-
-            return current;
         }
 
-        private void Add(PriorityQueueNode<T> node, ref PriorityQueueNode<T> tree)
+        public PriorityQueueNode<T> Max
         {
-            if (tree == null)
+            get
             {
-                tree = node;
+                PriorityQueueNode<T> current = root;
+
+                while (current.Right != null)
+                {
+                    current = current.Right;
+                }
+
+                return current;
+            }
+        }
+
+        private void DeleteNode(ref PriorityQueueNode<T> node)
+        {
+            if (node.Left == null)
+            {
+                node = node.Right;
+            }
+            else if (node.Right == null)
+            {
+                node = node.Left;
             }
             else
             {
-                if (node.Priority < tree.Priority)
+                PriorityQueueNode<T> current;
+
+                for (current = node.Left; current.Right != null; current = current.Right)
+                    continue;
+
+                current.Right = node.Right;
+                node = node.Left;
+            }
+        }
+
+        public LinkedList<T> TraverseMin()
+        {
+            LinkedList<T> list = new LinkedList<T>();
+            TraverseInOrder(root, list, true);
+
+            return list;
+        }
+
+        public LinkedList<T> TraverseMax()
+        {
+            LinkedList<T> list = new LinkedList<T>();
+            TraverseInOrder(root, list, false);
+
+            return list;
+        }
+
+        private void TraverseInOrder(PriorityQueueNode<T> node, LinkedList<T> list, bool min)
+        {
+            if (node != null)
+            {
+                TraverseInOrder(min ? node.Left : node.Right, list, min);
+                list.Add(node.Data);
+                TraverseInOrder(min ? node.Right : node.Left, list, min);
+            }
+        }
+
+        private void AddNode(PriorityQueueNode<T> node, PriorityQueueNode<T> root)
+        {
+            if (node.Priority < root.Priority)
+            {
+                if (root.Left == null)
                 {
-                    Add(node, ref tree.Left);
+                    root.Left = node;
                 }
                 else
                 {
-                    Add(node, ref tree.Right);
+                    AddNode(node, root.Left);
+                }
+            }
+            else
+            {
+                if (root.Right == null)
+                {
+                    root.Right = node;
+                }
+                else
+                {
+                    AddNode(node, root.Right);
                 }
             }
         }
 
-        private void Exchange(ref PriorityQueueNode<T> node1, ref PriorityQueueNode<T> node2)
+        public override string ToString()
         {
-            T data = node1.Data;
-            int priority = node1.Priority;
+            LinkedList<T> list = TraverseMin();
+            string treeString = "";
 
-            node1.Data = node2.Data;
-            node1.Priority = node2.Priority;
+            foreach (T data in list)
+            {
+                treeString += data + " ";
+            }
 
-            node2.Data = data;
-            node2.Priority = priority;
+            return treeString;
         }
     }
 }

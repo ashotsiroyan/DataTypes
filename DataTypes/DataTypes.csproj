@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryTree\AVLTree.cs" />
+    <Compile Include="BinaryTree\BinaryHeap.cs" />
     <Compile Include="BinaryTree\BinarySearchTree.cs" />
     <Compile Include="BinaryTree\BinaryTree.cs" />
     <Compile Include="BinaryTree\Node.cs" />

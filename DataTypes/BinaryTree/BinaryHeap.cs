@@ -1,28 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DataTypes
 {
-    public class PriorityQueue<T>
+    public class BinaryHeap<T>
+        where T: IComparable
     {
-        private List<PriorityQueueNode<T>> heap;
+        private List<T> heap;
 
-        public PriorityQueue()
+        public BinaryHeap()
         {
-            heap = new List<PriorityQueueNode<T>>();
+            heap = new List<T>();
         }
 
-        public void Insert(T data, int priority)
-        {
-            Insert(new PriorityQueueNode<T>(data, priority));
-        }
-
-        public void Insert(PriorityQueueNode<T> node)
+        public void Insert(T node)
         {
             heap.Add(node);
 
             int current = Size - 1;
 
-            while (current != 0 && heap[current].Priority < heap[FindParent(current)].Priority)
+            while (current != 0 && heap[current].CompareTo(heap[FindParent(current)]) < 0)
             {
                 int parent = FindParent(current);
                 Exchange(current, parent);
@@ -30,9 +27,9 @@ namespace DataTypes
             }
         }
 
-        public PriorityQueueNode<T> ExtractMin()
+        public T ExtractMin()
         {
-            PriorityQueueNode<T> node = heap[0];
+            T node = heap[0];
 
             heap[0] = heap[Size - 1];
             heap.RemoveAt(Size - 1);
@@ -43,7 +40,7 @@ namespace DataTypes
             {
                 int min = MinChild(current);
 
-                if (heap[current].Priority < heap[min].Priority)
+                if (heap[current].CompareTo(heap[min]) < 0)
                     return node;
 
                 Exchange(current, min);
@@ -53,13 +50,13 @@ namespace DataTypes
             return node;
         }
 
-        public int FindParent(T data)
+        public int FindParent(T node)
         {
             int i = 0;
 
-            foreach (PriorityQueueNode<T> current in heap)
+            foreach (T current in heap)
             {
-                if (data.Equals(current.Data))
+                if (node.Equals(current))
                     return (i - 1) / 2;
             }
 
@@ -68,7 +65,7 @@ namespace DataTypes
 
         public int FindParent(int index)
         {
-            if (Size > index)
+            if(Size > index)
                 return (index - 1) / 2;
 
             return -1;
@@ -76,7 +73,7 @@ namespace DataTypes
 
         public bool HasChildren(int index)
         {
-            if (Size > 2 * index + 1 || Size > 2 * index + 2)
+            if (Size > 2*index + 1 || Size > 2 * index + 2)
                 return true;
 
             return false;
@@ -90,7 +87,8 @@ namespace DataTypes
                 return index * 2 + 1;
             else
             {
-                if (heap[index * 2 + 1].Priority < heap[index * 2 + 2].Priority)
+                int compare = heap[index * 2 + 1].CompareTo(heap[index * 2 + 2]);
+                if (compare < 0)
                     return index * 2 + 1;
                 else
                     return index * 2 + 2;
@@ -112,7 +110,7 @@ namespace DataTypes
 
         private void Exchange(int x, int y)
         {
-            PriorityQueueNode<T> t = heap[x];
+            T t = heap[x];
             heap[x] = heap[y];
             heap[y] = t;
         }
