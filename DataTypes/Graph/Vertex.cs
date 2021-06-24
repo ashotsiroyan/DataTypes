@@ -3,13 +3,13 @@
     public class Vertex<T>
     {
         public T Data { get; set; }
-        public LinkedList<Vertex<T>> Neighbors { get; private set; }
+        public LinkedList<int> Neighbors { get; private set; }
 
         public Vertex(T data)
         {
             Data = data;
 
-            Neighbors = new LinkedList<Vertex<T>>();
+            Neighbors = new LinkedList<int>();
         }
 
         public int NeighborsCount
@@ -17,17 +17,17 @@
             get { return Neighbors.Count; }
         }
 
-        public void AddEdge(Vertex<T> edge)
+        public void AddEdge(int index)
         {
-            if (!Neighbors.Contains(edge))
+            if (!Neighbors.Contains(index))
             {
-                Neighbors.Add(edge);
+                Neighbors.Add(index);
             }
         }
 
-        public void RemoveEdge(Vertex<T> edge)
+        public void RemoveEdge(int index)
         {
-            Neighbors.Remove(edge);
+            Neighbors.Remove(index);
         }
 
         public void RemoveAllEdges()

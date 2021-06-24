@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 
 namespace DataTypes
 {
@@ -48,23 +49,23 @@ namespace DataTypes
 
         public bool AddEdge(T from, T to)
         {
-            Vertex<T> nodeFrom = FindNode(from);
-            Vertex<T> nodeTo = FindNode(to);
+            int nodeFrom = FindNodeIndex(from);
+            int nodeTo = FindNodeIndex(to);
 
-            if (nodeFrom == null || nodeTo == null)
+            if (nodeFrom == -1 || nodeTo == -1)
                 return false;
             else
             {
-                nodeFrom.AddEdge(nodeTo);
+                Vertices[nodeFrom].AddEdge(nodeTo);
                 return true;
             }
         }
 
         public bool RemoveEdge(T to)
         {
-            Vertex<T> nodeTo = FindNode(to);
+            int nodeTo = FindNodeIndex(to);
 
-            if (nodeTo == null)
+            if (nodeTo == -1)
                 return false;
             else
             {
@@ -80,16 +81,16 @@ namespace DataTypes
 
         public bool RemoveEdge(T from, T to)
         {
-            Vertex<T> nodeFrom = FindNode(from);
-            Vertex<T> nodeTo = FindNode(to);
+            int nodeFrom = FindNodeIndex(from);
+            int nodeTo = FindNodeIndex(to);
 
-            if (nodeFrom == null || nodeTo == null)
+            if (nodeFrom == -1 || nodeTo == -1)
                 return false;
-            else if (!nodeFrom.Neighbors.Contains(nodeTo))
+            else if (!Vertices[nodeFrom].Neighbors.Contains(nodeTo))
                 return false;
             else
             {
-                nodeFrom.Neighbors.Remove(nodeTo);
+                Vertices[nodeFrom].Neighbors.Remove(nodeTo);
                 return true;
             }
         }
@@ -103,25 +104,23 @@ namespace DataTypes
         {
             bool[] visited = new bool[Vertices.Count];
 
-            void recursionDFS(T _node)
-            {
-                int index = FindNodeIndex(_node);
+            int index = FindNodeIndex(node);
 
-                if (index != -1)
-                {
-                    visited[index] = true;
-
-                    foreach (Vertex<T> vertex in Vertices[index].Neighbors)
-                    {
-                        if (!visited[FindNodeIndex(vertex.Data)])
-                            recursionDFS(vertex.Data);
-                    }
-                }
-            }
-
-            recursionDFS(node);
+            if (index != -1)
+                RecursionDFS(visited, index);
 
             return visited;
+        }
+
+        private void RecursionDFS(bool[] visited, int node)
+        {
+            visited[node] = true;
+
+            foreach (int index in Vertices[node].Neighbors)
+            {
+                if (!visited[index])
+                    RecursionDFS(visited, index);
+            }
         }
 
         public bool[] StackDFS(T node)
@@ -144,12 +143,10 @@ namespace DataTypes
 
                     visited[c] = true;
 
-                    foreach (Vertex<T> vertex in Vertices[c].Neighbors)
+                    foreach (int vertex in Vertices[c].Neighbors)
                     {
-                        index = FindNodeIndex(vertex.Data);
-
-                        if (!visited[index])
-                            stack.Push(index);
+                        if (!visited[vertex])
+                            stack.Push(vertex);
                     }
                 }
             }
@@ -183,13 +180,11 @@ namespace DataTypes
                     instack[c] = false;
                     visited[c] = true;
 
-                    foreach (Vertex<T> vertex in Vertices[c].Neighbors)
+                    foreach (int vertex in Vertices[c].Neighbors)
                     {
-                        index = FindNodeIndex(vertex.Data);
-
-                        if (!visited[index] && !instack[index])
+                        if (!visited[vertex] && !instack[vertex])
                         {
-                            stack.Push(index);
+                            stack.Push(vertex);
                             instack[c] = true;
                         }
                     }
@@ -225,13 +220,11 @@ namespace DataTypes
                     inqueue[c] = false;
                     visited[c] = true;
 
-                    foreach (Vertex<T> vertex in Vertices[c].Neighbors)
+                    foreach (int vertex in Vertices[c].Neighbors)
                     {
-                        index = FindNodeIndex(vertex.Data);
-
-                        if (!visited[index] && !inqueue[index])
+                        if (!visited[vertex] && !inqueue[vertex])
                         {
-                            queue.Enqueue(index);
+                            queue.Enqueue(vertex);
                             inqueue[c] = true;
                         }
                     }
@@ -247,14 +240,41 @@ namespace DataTypes
 
             for (int i = 0; i < Vertices.Count; ++i)
             {
-                foreach (Vertex<T> node in Vertices[i].Neighbors)
+                foreach (int j in Vertices[i].Neighbors)
                 {
-                    int j = FindNodeIndex(node.Data);
                     matrix[i,j] = true;
                 }
             }
 
             return matrix;
+        }
+
+        public LinkedList<T> TopologiclSort()
+        {
+            bool[] visited = new bool[Vertices.Count];
+            LinkedList<T> sorted = new LinkedList<T>();
+
+            for (int i = 0; i < Vertices.Count; ++i)
+            {
+                if (!visited[i])
+                    DFSTopologiclSort(visited, sorted, i);
+            }
+
+            return sorted;
+        }
+
+        private void DFSTopologiclSort(bool[] visited, LinkedList<T> sorted, int index)
+        {
+            visited[index] = true;
+            foreach (int vertex in Vertices[index].Neighbors)
+            {
+                if (!visited[vertex])
+                {
+                    DFSTopologiclSort(visited, sorted, vertex);
+                }
+            }
+
+            sorted.AddFirst(Vertices[index].Data);
         }
 
         private Vertex<T> FindNode(T node)
