@@ -22,9 +22,9 @@ namespace DataTypes
 
             int current = Size - 1;
 
-            while (current != 0 && heap[current].Priority < heap[FindParent(current)].Priority)
+            while (current != 0 && heap[current].Priority < heap[FindParentIndex(current)].Priority)
             {
-                int parent = FindParent(current);
+                int parent = FindParentIndex(current);
                 Exchange(current, parent);
                 current = parent;
             }
@@ -43,7 +43,7 @@ namespace DataTypes
 
                 while (HasChildren(current))
                 {
-                    int min = MinChild(current);
+                    int min = MinChildIndex(current);
 
                     if (heap[current].Priority < heap[min].Priority)
                         return node;
@@ -58,20 +58,20 @@ namespace DataTypes
                 return null;
         }
 
-        public int FindParent(T data)
+        public PriorityQueueNode<T> FindParent(T data)
         {
             int i = 0;
 
             foreach (PriorityQueueNode<T> current in heap)
             {
                 if (data.Equals(current.Data))
-                    return (i - 1) / 2;
+                    return heap[FindParentIndex(i)];
             }
 
-            return -1;
+            return null;
         }
 
-        public int FindParent(int index)
+        public int FindParentIndex(int index)
         {
             if (Size > index)
                 return (index - 1) / 2;
@@ -87,7 +87,7 @@ namespace DataTypes
             return false;
         }
 
-        public int MinChild(int index)
+        public int MinChildIndex(int index)
         {
             if (!HasChildren(index))
                 return -1;

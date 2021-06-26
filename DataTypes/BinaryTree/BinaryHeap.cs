@@ -19,10 +19,10 @@ namespace DataTypes
 
             int current = Size - 1;
 
-            while (current != 0 && heap[current].CompareTo(heap[FindParent(current)]) < 0)
+            while (current != 0 && heap[current].CompareTo(heap[FindParentIndex(current)]) < 0)
             {
-                int parent = FindParent(current);
-                Exchange(current, parent);
+                int parent = FindParentIndex(current);
+                Swap(current, parent);
                 current = parent;
             }
         }
@@ -40,12 +40,12 @@ namespace DataTypes
 
                 while (HasChildren(current))
                 {
-                    int min = MinChild(current);
+                    int min = MinChildIndex(current);
 
                     if (heap[current].CompareTo(heap[min]) < 0)
                         return node;
 
-                    Exchange(current, min);
+                    Swap(current, min);
                     current = min;
                 }
 
@@ -55,20 +55,28 @@ namespace DataTypes
                 return default(T);
         }
 
-        public int FindParent(T node)
+        public T Peek()
+        {
+            if (!IsEmpty)
+                return heap[0];
+            else
+                return default(T);
+        }
+
+        public T FindParent(T node)
         {
             int i = 0;
 
             foreach (T current in heap)
             {
                 if (node.Equals(current))
-                    return (i - 1) / 2;
+                    return heap[FindParentIndex(i)];
             }
 
-            return -1;
+            return default(T);
         }
 
-        public int FindParent(int index)
+        public int FindParentIndex(int index)
         {
             if(Size > index)
                 return (index - 1) / 2;
@@ -78,13 +86,13 @@ namespace DataTypes
 
         public bool HasChildren(int index)
         {
-            if (Size > 2*index + 1 || Size > 2 * index + 2)
+            if (Size > 2 * index + 1 || Size > 2 * index + 2)
                 return true;
 
             return false;
         }
 
-        public int MinChild(int index)
+        public int MinChildIndex(int index)
         {
             if (!HasChildren(index))
                 return -1;
@@ -113,7 +121,7 @@ namespace DataTypes
             get { return Size == 0; }
         }
 
-        private void Exchange(int x, int y)
+        private void Swap(int x, int y)
         {
             T t = heap[x];
             heap[x] = heap[y];

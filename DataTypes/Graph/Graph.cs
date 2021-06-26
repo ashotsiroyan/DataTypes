@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System;
 
 namespace DataTypes
 {
@@ -236,13 +235,13 @@ namespace DataTypes
 
         public bool[,] toMatrix()
         {
-            bool[,] matrix = new bool[Vertices.Count,Vertices.Count];
+            bool[,] matrix = new bool[Vertices.Count, Vertices.Count];
 
             for (int i = 0; i < Vertices.Count; ++i)
             {
                 foreach (int j in Vertices[i].Neighbors)
                 {
-                    matrix[i,j] = true;
+                    matrix[i, j] = true;
                 }
             }
 

@@ -2,7 +2,7 @@
 
 namespace DataTypes
 {
-    public class BinarySearchTree<T>: IBinaryTree<T>
+    public class BinarySearchTree<T> : IBinaryTree<T>
         where T : IComparable
     {
         private BinaryTreeNode<T> root;
@@ -94,23 +94,21 @@ namespace DataTypes
             return pair;
         }
 
-        public bool Delete(T data)
+        public void Delete(T data)
         {
             Pair<T> pair = FindPair(data);
 
-            if (pair.child == null)
-                return false;
+            if(pair.child != null)
+            {
+                if (pair.parent == null)
+                    DeleteNode(ref root);
+                else if (pair.parent.Left == pair.child)
+                    DeleteNode(ref pair.parent.Left);
+                else
+                    DeleteNode(ref pair.parent.Right);
 
-            if (pair.parent == null)
-                DeleteNode(ref root);
-            else if (pair.parent.Left == pair.child)
-                DeleteNode(ref pair.parent.Left);
-            else
-                DeleteNode(ref pair.parent.Right);
-
-            --size;
-
-            return true;
+                --size;
+            }
         }
 
         public void Clear()

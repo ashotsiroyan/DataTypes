@@ -2,7 +2,7 @@
 
 namespace DataTypes
 {
-    public class AVLTree<T>: IBinaryTree<T>
+    public class AVLTree<T> : IBinaryTree<T>
         where T: IComparable
     {
         private BinaryTreeNode<T> root;
@@ -93,9 +93,10 @@ namespace DataTypes
 
             return pair;
         }
-        public bool Delete(T data)
+
+        public void Delete(T data)
         {
-            return false;
+            root = Delete(root, data);
         }
 
         public void Clear()
@@ -158,6 +159,7 @@ namespace DataTypes
         private void balanceTree(ref BinaryTreeNode<T> node)
         {
             int b_factor = balanceFactor(node);
+
             if (b_factor > 1)
             {
                 if (balanceFactor(node.Left) > 0)
@@ -180,6 +182,85 @@ namespace DataTypes
                     RotateRR(ref node);
                 }
             }
+        }
+
+        private BinaryTreeNode<T> Delete(BinaryTreeNode<T> current, T data)
+        {
+            BinaryTreeNode<T> parent;
+
+            if (current == null)
+            { 
+                return null;
+            }
+            else
+            {
+                int compare = data.CompareTo(current.Data);
+
+                if (compare < 0)
+                {
+                    current.Left = Delete(current.Left, data);
+
+                    if (balanceFactor(current) == -2)
+                    {
+                        if (balanceFactor(current.Right) <= 0)
+                        {
+                            RotateRR(ref current);
+                        }
+                        else
+                        {
+                            RotateRL(ref current);
+                        }
+                    }
+                }
+                else if (compare > 0)
+                {
+                    current.Right = Delete(current.Right, data);
+
+                    if (balanceFactor(current) == 2)
+                    {
+                        if (balanceFactor(current.Left) >= 0)
+                        {
+                            RotateLL(ref current);
+                        }
+                        else
+                        {
+                            RotateLR(ref current);
+                        }
+                    }
+                }
+                else
+                {
+                    if (current.Right != null)
+                    {
+                        parent = current.Right;
+
+                        while (parent.Left != null)
+                        {
+                            parent = parent.Left;
+                        }
+
+                        current.Data = parent.Data;
+                        current.Right = Delete(current.Right, parent.Data);
+
+                        if (balanceFactor(current) == 2)
+                        {
+                            if (balanceFactor(current.Left) >= 0)
+                            {
+                                RotateLL(ref current);
+                            }
+                            else { 
+                                RotateLR(ref current); 
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return current.Left;
+                    }
+                }
+            }
+
+            return current;
         }
 
         private int balanceFactor(BinaryTreeNode<T> current)

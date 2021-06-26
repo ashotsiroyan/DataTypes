@@ -19,7 +19,7 @@ namespace DataTypes
         BinaryTreeNode<T> Find(T data);
         BinaryTreeNode<T> FindParent(BinaryTreeNode<T> node);
         Pair<T> FindPair(T data);
-        bool Delete(T data);
+        void Delete(T data);
         void Clear();
         LinkedList<T> TraverseInOrder();
         LinkedList<T> TraversePreOrder();
