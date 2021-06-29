@@ -2,42 +2,51 @@
 {
     public class Vertex<T>
     {
-        public T Data { get; set; }
-        public LinkedList<int> Neighbors { get; private set; }
+        private T data;
+        private LinkedList<Vertex<T>> edges;
 
         public Vertex(T data)
         {
-            Data = data;
+            this.data = data;
 
-            Neighbors = new LinkedList<int>();
+            this.edges = new LinkedList<Vertex<T>>();
         }
 
-        public int NeighborsCount
+        public void AddEdge(Vertex<T> vertex)
         {
-            get { return Neighbors.Count; }
-        }
-
-        public void AddEdge(int index)
-        {
-            if (!Neighbors.Contains(index))
+            if (!edges.Contains(vertex))
             {
-                Neighbors.Add(index);
+                edges.Add(vertex);
             }
         }
 
-        public void RemoveEdge(int index)
+        public void RemoveEdge(Vertex<T> vertex)
         {
-            Neighbors.Remove(index);
+            edges.Remove(vertex);
         }
 
         public void RemoveAllEdges()
         {
-            Neighbors.Clear();
+            edges.Clear();
+        }
+
+        public T Data {
+            get { return data; }
+        }
+
+        public LinkedList<Vertex<T>> Edges
+        {
+            get { return edges; }
+        }
+
+        public int EdgesCount
+        {
+            get { return edges.Count; }
         }
 
         public override string ToString()
         {
-            return Data.ToString();
+            return data.ToString();
         }
     }
 }

@@ -3,7 +3,7 @@
 namespace DataTypes
 {
     public class BinaryTreeNode<T>
-        where T: IComparable
+        where T : IComparable
     {
         public BinaryTreeNode()
         {

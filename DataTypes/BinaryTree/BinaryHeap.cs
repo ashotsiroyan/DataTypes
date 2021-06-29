@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace DataTypes
 {
     public class BinaryHeap<T>
-        where T: IComparable
+        where T : IComparable
     {
         private List<T> heap;
 
@@ -18,16 +18,17 @@ namespace DataTypes
             heap.Add(node);
 
             int current = Size - 1;
+            int parent = FindParentIndex(current);
 
-            while (current != 0 && heap[current].CompareTo(heap[FindParentIndex(current)]) < 0)
+            while (current != 0 && heap[current].CompareTo(heap[parent]) > 0)
             {
-                int parent = FindParentIndex(current);
                 Swap(current, parent);
                 current = parent;
+                parent = FindParentIndex(current);
             }
         }
 
-        public T ExtractMin()
+        public T Extract()
         {
             if (!IsEmpty)
             {
@@ -40,25 +41,17 @@ namespace DataTypes
 
                 while (HasChildren(current))
                 {
-                    int min = MinChildIndex(current);
+                    int max = MaxChildIndex(current);
 
-                    if (heap[current].CompareTo(heap[min]) < 0)
+                    if (heap[current].CompareTo(heap[max]) > 0)
                         return node;
 
-                    Swap(current, min);
-                    current = min;
+                    Swap(current, max);
+                    current = max;
                 }
 
                 return node;
             }
-            else
-                return default(T);
-        }
-
-        public T Peek()
-        {
-            if (!IsEmpty)
-                return heap[0];
             else
                 return default(T);
         }
@@ -70,7 +63,14 @@ namespace DataTypes
             foreach (T current in heap)
             {
                 if (node.Equals(current))
-                    return heap[FindParentIndex(i)];
+                {
+                    if (i != 0)
+                        return heap[FindParentIndex(i)];
+                    else
+                        break;
+                }
+
+                i++;
             }
 
             return default(T);
@@ -108,12 +108,36 @@ namespace DataTypes
             }
         }
 
-        public int Size
+        public int MaxChildIndex(int index)
+        {
+            if (!HasChildren(index))
+                return -1;
+            else if (Size <= 2 * index + 2)
+                return index * 2 + 1;
+            else
+            {
+                int compare = heap[index * 2 + 1].CompareTo(heap[index * 2 + 2]);
+                if (compare > 0)
+                    return index * 2 + 1;
+                else
+                    return index * 2 + 2;
+            }
+        }
+
+        public T Root
         {
             get
             {
-                return heap.Count;
+                if (!IsEmpty)
+                    return heap[0];
+                else
+                    return default(T);
             }
+        }
+
+        public int Size
+        {
+            get { return heap.Count; }
         }
 
         public bool IsEmpty

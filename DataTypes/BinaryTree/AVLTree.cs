@@ -3,7 +3,7 @@
 namespace DataTypes
 {
     public class AVLTree<T> : IBinaryTree<T>
-        where T: IComparable
+        where T : IComparable
     {
         private BinaryTreeNode<T> root;
         private int size;

@@ -5,35 +5,35 @@ namespace DataTypes
 {
     public class LinkedList<T>: IEnumerable<T>
     {
-        public LinkedListNode<T> Head { get; private set; }
-        public LinkedListNode<T> Tail { get; private set; }
-        public int Count { get; private set; }
+        private LinkedListNode<T> head;
+        private LinkedListNode<T> tail;
+        private int count;
 
         public void Add(T data)
         {
             LinkedListNode<T> node = new LinkedListNode<T>(data);
 
-            if (Head == null)
-                Head = node;
+            if (head == null)
+                head = node;
             else
-                Tail.Next = node;
+                tail.Next = node;
 
-            Tail = node;
+            tail = node;
 
-            Count++;
+            count++;
         }
 
         public void AddFirst(T data)
         {
             LinkedListNode<T> node = new LinkedListNode<T>(data);
 
-            node.Next = Head;
-            Head = node;
+            node.Next = head;
+            head = node;
 
-            if (Count == 0)
-                Tail = Head;
+            if (count == 0)
+                tail = head;
 
-            Count++;
+            count++;
         }
 
         public bool AddAfter(LinkedListNode<T> node, T data)
@@ -49,7 +49,7 @@ namespace DataTypes
 
                     node.Next = _node;
 
-                    Count++;
+                    count++;
                     return true;
                 }
                 else
@@ -64,7 +64,7 @@ namespace DataTypes
 
         public bool Remove(T data)
         {
-            LinkedListNode<T> current = Head;
+            LinkedListNode<T> current = head;
             LinkedListNode<T> previous = null;
 
             while (current != null)
@@ -76,17 +76,17 @@ namespace DataTypes
                         previous.Next = current.Next;
 
                         if (current.Next == null)
-                            Tail = previous;
+                            tail = previous;
                     }
                     else
                     {
-                        Head = Head.Next;
+                        head = head.Next;
 
-                        if (Head == null)
-                            Tail = null;
+                        if (head == null)
+                            tail = null;
                     }
 
-                    Count--;
+                    count--;
 
                     return true;
                 }
@@ -100,7 +100,7 @@ namespace DataTypes
 
         public bool Remove(LinkedListNode<T> node)
         {
-            LinkedListNode<T> current = Head;
+            LinkedListNode<T> current = head;
             LinkedListNode<T> previous = null;
 
             while (current != null)
@@ -112,17 +112,17 @@ namespace DataTypes
                         previous.Next = current.Next;
 
                         if (current.Next == null)
-                            Tail = previous;
+                            head = previous;
                     }
                     else
                     {
-                        Head = Head.Next;
+                        head = head.Next;
 
-                        if (Head == null)
-                            Tail = null;
+                        if (head == null)
+                            tail = null;
                     }
 
-                    Count--;
+                    count--;
 
                     return true;
                 }
@@ -136,7 +136,7 @@ namespace DataTypes
 
         public LinkedListNode<T> Find(T data)
         {
-            LinkedListNode<T> current = Head;
+            LinkedListNode<T> current = head;
 
             while (current != null)
             {
@@ -151,7 +151,7 @@ namespace DataTypes
 
         public LinkedListNode<T> Find(LinkedListNode<T> node)
         {
-            LinkedListNode<T> current = Head;
+            LinkedListNode<T> current = head;
 
             while (current != null)
             {
@@ -172,15 +172,30 @@ namespace DataTypes
             return false;
         }
 
+        public LinkedListNode<T> Head
+        {
+            get { return head; }
+        }
+
+        public LinkedListNode<T> Tail
+        {
+            get { return tail; }
+        }
+
+        public int Count
+        {
+            get { return count; }
+        }
+
         public void Clear()
         {
-            Head = null;
-            Tail = null;
-            Count = 0;
+            head = null;
+            tail = null;
+            count = 0;
         }
 
         public bool IsEmpty {
-            get { return Count == 0; }
+            get { return count == 0; }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -190,7 +205,7 @@ namespace DataTypes
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            LinkedListNode<T> current = Head;
+            LinkedListNode<T> current = head;
             while (current != null)
             {
                 yield return current.Data;

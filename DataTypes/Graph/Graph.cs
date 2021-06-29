@@ -4,26 +4,26 @@ namespace DataTypes
 {
     public class Graph<T>
     {
-        public List<Vertex<T>> Vertices { get; private set; }
+        private List<Vertex<T>> vertices;
 
         public Graph()
         {
-            Vertices = new List<Vertex<T>>();
+            vertices = new List<Vertex<T>>();
         }
 
         public Graph(T[] vertices)
         {
-            Vertices = new List<Vertex<T>>();
+            this.vertices = new List<Vertex<T>>();
 
             for (int i = 0; i < vertices.Length; ++i)
-                Vertices.Add(new Vertex<T>(vertices[i]));
+                this.vertices.Add(new Vertex<T>(vertices[i]));
         }
 
         public bool AddNode(T data)
         {
             if (FindNode(data) == null)
             {
-                Vertices.Add(new Vertex<T>(data));
+                vertices.Add(new Vertex<T>(data));
                 return true;
             }
             else
@@ -38,7 +38,7 @@ namespace DataTypes
             {
                 RemoveEdge(data);
 
-                Vertices.Remove(node);
+                vertices.Remove(node);
 
                 return true;
             }
@@ -48,30 +48,30 @@ namespace DataTypes
 
         public bool AddEdge(T from, T to)
         {
-            int nodeFrom = FindNodeIndex(from);
-            int nodeTo = FindNodeIndex(to);
+            Vertex<T> nodeFrom = FindNode(from);
+            Vertex<T> nodeTo = FindNode(to);
 
-            if (nodeFrom == -1 || nodeTo == -1)
+            if (nodeFrom == null || nodeTo == null)
                 return false;
             else
             {
-                Vertices[nodeFrom].AddEdge(nodeTo);
+                nodeFrom.AddEdge(nodeTo);
                 return true;
             }
         }
 
         public bool RemoveEdge(T to)
         {
-            int nodeTo = FindNodeIndex(to);
+            Vertex<T> nodeTo = FindNode(to);
 
-            if (nodeTo == -1)
+            if (nodeTo == null)
                 return false;
             else
             {
-                foreach (Vertex<T> node in Vertices)
+                foreach (Vertex<T> node in vertices)
                 {
-                    if (node.Neighbors.Contains(nodeTo))
-                        node.Neighbors.Remove(nodeTo);
+                    if (node.Edges.Contains(nodeTo))
+                        node.Edges.Remove(nodeTo);
                 }
             }
 
@@ -80,28 +80,33 @@ namespace DataTypes
 
         public bool RemoveEdge(T from, T to)
         {
-            int nodeFrom = FindNodeIndex(from);
-            int nodeTo = FindNodeIndex(to);
+            Vertex<T> nodeFrom = FindNode(from);
+            Vertex<T> nodeTo = FindNode(to);
 
-            if (nodeFrom == -1 || nodeTo == -1)
+            if (nodeFrom == null || nodeTo == null)
                 return false;
-            else if (!Vertices[nodeFrom].Neighbors.Contains(nodeTo))
+            else if (!nodeFrom.Edges.Contains(nodeTo))
                 return false;
             else
             {
-                Vertices[nodeFrom].Neighbors.Remove(nodeTo);
+                nodeFrom.Edges.Remove(nodeTo);
                 return true;
             }
         }
 
+        public IList<Vertex<T>> Vertices
+        {
+            get { return vertices.AsReadOnly(); }
+        }
+
         public int Size
         {
-            get { return Vertices.Count; }
+            get { return vertices.Count; }
         }
 
         public bool[] DFS(T node)
         {
-            bool[] visited = new bool[Vertices.Count];
+            bool[] visited = new bool[vertices.Count];
 
             int index = FindNodeIndex(node);
 
@@ -115,8 +120,10 @@ namespace DataTypes
         {
             visited[node] = true;
 
-            foreach (int index in Vertices[node].Neighbors)
+            foreach (Vertex<T> vertex in vertices[node].Edges)
             {
+                int index = FindNodeIndex(vertex);
+
                 if (!visited[index])
                     RecursionDFS(visited, index);
             }
@@ -124,10 +131,10 @@ namespace DataTypes
 
         public bool[] StackDFS(T node)
         {
-            Stack<int> stack = new Stack<int>(Vertices.Count);
-            bool[] visited = new bool[Vertices.Count];
+            Stack<int> stack = new Stack<int>(vertices.Count);
+            bool[] visited = new bool[vertices.Count];
 
-            for (int i = 0; i < Vertices.Count; ++i)
+            for (int i = 0; i < vertices.Count; ++i)
                 visited[i] = false;
 
             int index = FindNodeIndex(node);
@@ -142,10 +149,12 @@ namespace DataTypes
 
                     visited[c] = true;
 
-                    foreach (int vertex in Vertices[c].Neighbors)
+                    foreach (Vertex<T> vertex in vertices[c].Edges)
                     {
-                        if (!visited[vertex])
-                            stack.Push(vertex);
+                        index = FindNodeIndex(vertex);
+
+                        if (!visited[index])
+                            stack.Push(index);
                     }
                 }
             }
@@ -155,11 +164,11 @@ namespace DataTypes
 
         public bool[] NoDupStackDFS(T node)
         {
-            Stack<int> stack = new Stack<int>(Vertices.Count);
-            bool[] instack = new bool[Vertices.Count];
-            bool[] visited = new bool[Vertices.Count];
+            Stack<int> stack = new Stack<int>(vertices.Count);
+            bool[] instack = new bool[vertices.Count];
+            bool[] visited = new bool[vertices.Count];
 
-            for (int i = 0; i < Vertices.Count; ++i)
+            for (int i = 0; i < vertices.Count; ++i)
             {
                 instack[i] = false;
                 visited[i] = false;
@@ -179,12 +188,14 @@ namespace DataTypes
                     instack[c] = false;
                     visited[c] = true;
 
-                    foreach (int vertex in Vertices[c].Neighbors)
+                    foreach (Vertex<T> vertex in vertices[c].Edges)
                     {
-                        if (!visited[vertex] && !instack[vertex])
+                        index = FindNodeIndex(node);
+
+                        if (!visited[index] && !instack[index])
                         {
-                            stack.Push(vertex);
-                            instack[c] = true;
+                            stack.Push(index);
+                            instack[index] = true;
                         }
                     }
                 }
@@ -195,11 +206,11 @@ namespace DataTypes
 
         public bool[] BFS(T node)
         {
-            Queue<int> queue = new Queue<int>(Vertices.Count);
-            bool[] inqueue = new bool[Vertices.Count];
-            bool[] visited = new bool[Vertices.Count];
+            Queue<int> queue = new Queue<int>(vertices.Count);
+            bool[] inqueue = new bool[vertices.Count];
+            bool[] visited = new bool[vertices.Count];
 
-            for (int i = 0; i < Vertices.Count; ++i)
+            for (int i = 0; i < vertices.Count; ++i)
             {
                 inqueue[i] = false;
                 visited[i] = false;
@@ -219,12 +230,14 @@ namespace DataTypes
                     inqueue[c] = false;
                     visited[c] = true;
 
-                    foreach (int vertex in Vertices[c].Neighbors)
+                    foreach (Vertex<T> vertex in vertices[c].Edges)
                     {
-                        if (!visited[vertex] && !inqueue[vertex])
+                        index = FindNodeIndex(node);
+
+                        if (!visited[index] && !inqueue[index])
                         {
-                            queue.Enqueue(vertex);
-                            inqueue[c] = true;
+                            queue.Enqueue(index);
+                            inqueue[index] = true;
                         }
                     }
                 }
@@ -235,12 +248,14 @@ namespace DataTypes
 
         public bool[,] toMatrix()
         {
-            bool[,] matrix = new bool[Vertices.Count, Vertices.Count];
+            bool[,] matrix = new bool[vertices.Count, vertices.Count];
 
-            for (int i = 0; i < Vertices.Count; ++i)
+            for (int i = 0; i < vertices.Count; ++i)
             {
-                foreach (int j in Vertices[i].Neighbors)
+                foreach (Vertex<T> vertex in vertices[i].Edges)
                 {
+                    int j = FindNodeIndex(vertex);
+
                     matrix[i, j] = true;
                 }
             }
@@ -250,10 +265,10 @@ namespace DataTypes
 
         public LinkedList<T> TopologiclSort()
         {
-            bool[] visited = new bool[Vertices.Count];
+            bool[] visited = new bool[vertices.Count];
             LinkedList<T> sorted = new LinkedList<T>();
 
-            for (int i = 0; i < Vertices.Count; ++i)
+            for (int i = 0; i < vertices.Count; ++i)
             {
                 if (!visited[i])
                     DFSTopologiclSort(visited, sorted, i);
@@ -265,20 +280,23 @@ namespace DataTypes
         private void DFSTopologiclSort(bool[] visited, LinkedList<T> sorted, int index)
         {
             visited[index] = true;
-            foreach (int vertex in Vertices[index].Neighbors)
+
+            foreach (Vertex<T> vertex in vertices[index].Edges)
             {
-                if (!visited[vertex])
+                int vertexIndex = FindNodeIndex(vertex);
+
+                if (!visited[vertexIndex])
                 {
-                    DFSTopologiclSort(visited, sorted, vertex);
+                    DFSTopologiclSort(visited, sorted, vertexIndex);
                 }
             }
 
-            sorted.AddFirst(Vertices[index].Data);
+            sorted.AddFirst(vertices[index].Data);
         }
 
         private Vertex<T> FindNode(T node)
         {
-            foreach (Vertex<T> vertex in Vertices)
+            foreach (Vertex<T> vertex in vertices)
             {
                 if (vertex.Data.Equals(node))
                 {
@@ -289,11 +307,28 @@ namespace DataTypes
             return null;
         }
 
+        private int FindNodeIndex(Vertex<T> node)
+        {
+            int i = 0;
+
+            foreach (Vertex<T> vertex in vertices)
+            {
+                if (vertex == node)
+                {
+                    return i;
+                }
+
+                ++i;
+            }
+
+            return -1;
+        }
+
         private int FindNodeIndex(T node)
         {
             int i = 0;
 
-            foreach (Vertex<T> vertex in Vertices)
+            foreach (Vertex<T> vertex in vertices)
             {
                 if (vertex.Data.Equals(node))
                 {
@@ -311,18 +346,18 @@ namespace DataTypes
             bool[,] matrix = toMatrix();
             string graphString = "    ";
 
-            for (int i = 0; i < Vertices.Count; ++i)
+            for (int i = 0; i < vertices.Count; ++i)
             {
-                graphString += " " + Vertices[i].Data + " ";
+                graphString += " " + vertices[i].Data + " ";
             }
 
             graphString += "\n\n";
 
-            for (int i = 0; i < Vertices.Count; ++i)
+            for (int i = 0; i < vertices.Count; ++i)
             {
-                graphString += Vertices[i].Data + " | ";
+                graphString += vertices[i].Data + " | ";
 
-                for (int j = 0; j < Vertices.Count; ++j)
+                for (int j = 0; j < vertices.Count; ++j)
                 {
                     graphString += " " + (matrix[i,j]?"1":"0") + " ";
                 }
