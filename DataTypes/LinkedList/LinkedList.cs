@@ -40,7 +40,7 @@ namespace DataTypes
         {
             if (node != null)
             {
-                if (Find(node) != null)
+                if (Contains(node))
                 {
                     LinkedListNode<T> _node = new LinkedListNode<T>(data);
 
@@ -149,25 +149,25 @@ namespace DataTypes
             return null;
         }
 
-        public LinkedListNode<T> Find(LinkedListNode<T> node)
+        public bool Contains(T data)
+        {
+            if (Find(data) != null)
+                return true;
+
+            return false;
+        }
+
+        public bool Contains (LinkedListNode<T> node)
         {
             LinkedListNode<T> current = head;
 
             while (current != null)
             {
                 if (current == node)
-                    return current;
+                    return true;
 
                 current = current.Next;
             }
-
-            return null;
-        }
-
-        public bool Contains(T data)
-        {
-            if (Find(data) != null)
-                return true;
 
             return false;
         }

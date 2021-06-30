@@ -71,7 +71,7 @@ namespace DataTypes
                 foreach (Vertex<T> node in vertices)
                 {
                     if (node.Edges.Contains(nodeTo))
-                        node.Edges.Remove(nodeTo);
+                        node.RemoveEdge(nodeTo);
                 }
             }
 
@@ -89,7 +89,7 @@ namespace DataTypes
                 return false;
             else
             {
-                nodeFrom.Edges.Remove(nodeTo);
+                nodeFrom.RemoveEdge(nodeTo);
                 return true;
             }
         }
