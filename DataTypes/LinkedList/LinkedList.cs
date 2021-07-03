@@ -44,10 +44,11 @@ namespace DataTypes
                 {
                     LinkedListNode<T> _node = new LinkedListNode<T>(data);
 
-                    if (node.Next != null)
-                        _node.Next = node.Next;
-
+                    _node.Next = node.Next;
                     node.Next = _node;
+
+                    if (_node.Next == null)
+                        tail = _node;
 
                     count++;
                     return true;
@@ -112,7 +113,7 @@ namespace DataTypes
                         previous.Next = current.Next;
 
                         if (current.Next == null)
-                            head = previous;
+                            tail = previous;
                     }
                     else
                     {
@@ -134,6 +135,33 @@ namespace DataTypes
             return false;
         }
 
+        public bool Remove(LinkedListNode<T> previous, LinkedListNode<T> node)
+        {
+            if (previous.Next == node)
+            {
+                if (previous != null)
+                {
+                    previous.Next = node.Next;
+
+                    if (node.Next == null)
+                        tail = previous;
+                }
+                else
+                {
+                    head = head.Next;
+
+                    if (head == null)
+                        tail = null;
+                }
+
+                count--;
+
+                return true;
+            }
+
+            return false;
+        }
+
         public LinkedListNode<T> Find(T data)
         {
             LinkedListNode<T> current = head;
@@ -147,6 +175,64 @@ namespace DataTypes
             }
 
             return null;
+        }
+
+        public T MoveToFrontFind(T data)
+        {
+            LinkedListNode<T> previous = null;
+            LinkedListNode<T> current = head;
+
+            while (current != null)
+            {
+                if (current.Data.Equals(data))
+                {
+                    if (previous != null)
+                    {
+                        T temp = current.Data;
+                        Remove(previous, current);
+                        AddAfter(null, temp);
+
+                        return temp;
+                    }
+
+                    return current.Data;
+                }
+
+                previous = current;
+                current = current.Next;
+            }
+
+            return default(T);
+        }
+
+        public T TranspositionFind(T data)
+        {
+            LinkedListNode<T> p = null;
+            LinkedListNode<T> q = null;
+            LinkedListNode<T> current = head;
+
+            while (current != null)
+            {
+                if (current.Data.Equals(data))
+                {
+                    if (p != null)
+                    {
+                        T temp = current.Data;
+                        Remove(p, current);
+                        AddAfter(q, temp);
+
+                        return temp;
+                    }
+
+                    return current.Data;
+                }
+
+                q = p;
+                p = current;
+                current = current.Next;
+            }
+
+            return default(T);
         }
 
         public bool Contains(T data)
