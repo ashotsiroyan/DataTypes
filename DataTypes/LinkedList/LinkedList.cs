@@ -9,10 +9,17 @@ namespace DataTypes
         private LinkedListNode<T> tail;
         private int count;
 
-        public void Add(T data)
+        public LinkedListNode<T> Add(T data)
         {
             LinkedListNode<T> node = new LinkedListNode<T>(data);
 
+            Add(node);
+
+            return node;
+        }
+
+        public void Add(LinkedListNode<T> node)
+        {
             if (head == null)
                 head = node;
             else
@@ -23,10 +30,17 @@ namespace DataTypes
             count++;
         }
 
-        public void AddFirst(T data)
+        public LinkedListNode<T> AddFirst(T data)
         {
             LinkedListNode<T> node = new LinkedListNode<T>(data);
 
+            AddFirst(node);
+
+            return node;
+        }
+
+        public void AddFirst(LinkedListNode<T> node)
+        {
             node.Next = head;
             head = node;
 
@@ -36,30 +50,30 @@ namespace DataTypes
             count++;
         }
 
-        public bool AddAfter(LinkedListNode<T> node, T data)
+        public LinkedListNode<T> AddAfter(LinkedListNode<T> previous, T data)
         {
-            if (node != null)
+            LinkedListNode<T> node = new LinkedListNode<T>(data);
+
+            AddAfter(previous, node);
+
+            return node;
+        }
+
+        public void AddAfter(LinkedListNode<T> previous, LinkedListNode<T> node)
+        {
+            if (previous != null)
             {
-                if (Contains(node))
-                {
-                    LinkedListNode<T> _node = new LinkedListNode<T>(data);
+                node.Next = previous.Next;
+                previous.Next = node;
 
-                    _node.Next = node.Next;
-                    node.Next = _node;
+                if (node.Next == null)
+                    tail = node;
 
-                    if (_node.Next == null)
-                        tail = _node;
-
-                    count++;
-                    return true;
-                }
-                else
-                    return false;
+                count++;
             }
             else
             {
-                AddFirst(data);
-                return true;
+                AddFirst(node);
             }
         }
 
@@ -177,7 +191,7 @@ namespace DataTypes
             return null;
         }
 
-        public T MoveToFrontFind(T data)
+        public LinkedListNode<T> MoveToFrontFind(T data)
         {
             LinkedListNode<T> previous = null;
             LinkedListNode<T> current = head;
@@ -188,24 +202,24 @@ namespace DataTypes
                 {
                     if (previous != null)
                     {
-                        T temp = current.Data;
+                        LinkedListNode<T> temp = current;
                         Remove(previous, current);
                         AddAfter(null, temp);
 
                         return temp;
                     }
 
-                    return current.Data;
+                    return current;
                 }
 
                 previous = current;
                 current = current.Next;
             }
 
-            return default(T);
+            return null;
         }
 
-        public T TranspositionFind(T data)
+        public LinkedListNode<T> TranspositionFind(T data)
         {
             LinkedListNode<T> p = null;
             LinkedListNode<T> q = null;
@@ -217,14 +231,14 @@ namespace DataTypes
                 {
                     if (p != null)
                     {
-                        T temp = current.Data;
+                        LinkedListNode<T> temp = current;
                         Remove(p, current);
                         AddAfter(q, temp);
 
                         return temp;
                     }
 
-                    return current.Data;
+                    return current;
                 }
 
                 q = p;
@@ -232,7 +246,7 @@ namespace DataTypes
                 current = current.Next;
             }
 
-            return default(T);
+            return null;
         }
 
         public bool Contains(T data)
